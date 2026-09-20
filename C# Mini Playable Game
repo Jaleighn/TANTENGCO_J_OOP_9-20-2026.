@@ -1,0 +1,119 @@
+using System;
+ 
+namespace CharacterLesson
+{
+    class Program
+    {
+        const int GridWidth = 10;
+        const int GridHeight = 10;
+ 
+        static Random random = new Random();
+ 
+        static void Main(string[] args)
+        {
+            int playerX = GridWidth / 2;
+            int playerY = GridHeight / 2;
+ 
+            int starX = random.Next(GridWidth);
+            int starY = random.Next(GridHeight);
+ 
+            while (starX == playerX && starY == playerY)
+            {
+                starX = random.Next(GridWidth);
+                starY = random.Next(GridHeight);
+            }
+ 
+            int score = 0;
+            bool running = true;
+ 
+            Console.WriteLine("Move with W/A/S/D, then press Enter. Type Q to quit.");
+ 
+            while (running)
+            {
+                DrawGrid(playerX, playerY, starX, starY, score);
+ 
+                Console.Write("Move: ");
+                string input = Console.ReadLine();
+ 
+                input = input == null ? "" : input.Trim().ToLower();
+ 
+                switch (input)
+                {
+                    case "w":
+                        playerY = Math.Max(0, playerY - 1);
+                        break;
+ 
+                    case "s":
+                        playerY = Math.Min(GridHeight - 1, playerY + 1);
+                        break;
+ 
+                    case "a":
+                        playerX = Math.Max(0, playerX - 1);
+                        break;
+ 
+                    case "d":
+                        playerX = Math.Min(GridWidth - 1, playerX + 1);
+                        break;
+ 
+                    case "q":
+                        running = false;
+                        break;
+ 
+                    default:
+                        Console.WriteLine("Unknown command. Use W, A, S, D, or Q.");
+                        break;
+                }
+ 
+                if (playerX == starX && playerY == starY)
+                {
+                    score++;
+ 
+                    do
+                    {
+                        starX = random.Next(GridWidth);
+                        starY = random.Next(GridHeight);
+                    }
+                    while (starX == playerX && starY == playerY);
+                }
+            }
+ 
+            Console.WriteLine("Thanks for playing!");
+            Console.WriteLine("Final Score: " + score);
+        }
+ 
+        static void DrawGrid(int playerX, int playerY, int starX, int starY, int score)
+        {
+            try
+            {
+                Console.Clear();
+            }
+            catch
+            {
+            }
+ 
+            Console.WriteLine("Score: " + score);
+            Console.WriteLine();
+ 
+            for (int y = 0; y < GridHeight; y++)
+            {
+                for (int x = 0; x < GridWidth; x++)
+                {
+                    if (x == playerX && y == playerY)
+                    {
+                        Console.Write('@');
+                    }
+                    else if (x == starX && y == starY)
+                    {
+                        Console.Write('*');
+                    }
+                    else
+                    {
+                        Console.Write('.');
+                    }
+                }
+ 
+                Console.WriteLine();
+            }
+        }
+    }
+}
